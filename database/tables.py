@@ -4,6 +4,26 @@ import sqlite3
 conn = sqlite3.connect("milling_data.db")
 cursor = conn.cursor()
 
+"""
+tables = [
+    "A1_feeds",
+    "A2_feeds",
+    "A3_finishing_feeds",
+    "A4_feeds",
+    "A5_feeds",
+    "A6_cutting_speeds",
+    "cutting_speed_coeffs_cu_al",
+    "tool_life",
+    "A9_speed_exponents",
+    "A10_surface_correction",
+    "tool_material_coeffs",
+    "A12_milling_machines"
+]
+
+for table in tables:
+    cursor.execute(f"DROP TABLE IF EXISTS {table}")
+"""
+
 # Створення таблиць A.4–A.8
 create_sql = """
 
@@ -29,11 +49,10 @@ CREATE TABLE IF NOT EXISTS A2_feeds (
 );
 
 -- Таблиця A.3 – Подачі при чистовому фрезеруванні
-CREATE TABLE IF NOT EXISTS feeds_finish (
+CREATE TABLE IF NOT EXISTS A3_finishing_feeds (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tool_type TEXT,
-    tool_material TEXT,
-    work_material TEXT,
+    cutter_type TEXT,
+    material TEXT,
     diameter_range TEXT,
     feed_min REAL,
     feed_max REAL
@@ -107,7 +126,7 @@ CREATE TABLE IF NOT EXISTS tool_life (
 CREATE TABLE IF NOT EXISTS A9_speed_exponents (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     material TEXT,
-    Oa TEXT,
+    condition TEXT,
     milling_hss REAL,
     milling_carbide REAL
 );
@@ -224,7 +243,7 @@ data_a3 = [
 
 # Додавання даних
 cursor.executemany("""
-INSERT INTO A3_feeds (cutter_type, material, diameter_range, feed_min, feed_max)
+INSERT INTO A3_finishing_feeds (cutter_type, material, diameter_range, feed_min, feed_max)
 VALUES (?, ?, ?, ?, ?)
 """, data_a3)
 
@@ -435,8 +454,8 @@ data_a9 = [
 
 cursor.executemany("""
 INSERT INTO A9_speed_exponents (
-    material, Oa, cutting_hss, cutting_carbide, milling_hss, milling_carbide
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    material, condition, milling_hss, milling_carbide
+) VALUES (?, ?, ?, ?)
 """, data_a9)
 
 # Дані A.10
