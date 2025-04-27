@@ -532,4 +532,3 @@ INSERT INTO A12_milling_machines (
 
 conn.commit()
 conn.close()
-print("Базу та таблиці створено, дані успішно додано.")
