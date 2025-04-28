@@ -20,8 +20,21 @@ class MillingApp(QWidget):
         self.processing_type_combo.addItems(["Чорнова", "Напівчистова", "Чистова"])
         parameters_layout.addRow(QLabel("Тип обробки:"), self.processing_type_combo)
 
+        self.processing_type_combo = QComboBox()
+        self.processing_type_combo.addItems(["Фрезерування площин", "Фрезерування пазів", "Чистова"])
+        parameters_layout.addRow(QLabel("Тип операції:"), self.processing_type_combo)
+
         self.material_combo = QComboBox()
-        self.material_combo.addItems(["Сталь", "Чавун", "Алюміній", "Мідь"])
+        self.material_combo.addItems(["Сталь конструкційна Т5К12В", "Сталь конструкційна Т5К10", "Сталь конструкційна P18",
+                                      "Сталь конструкційна Т15К6", "Сталь конструкційна Р6М5", "Сталь конструкційна Т30К4",
+                                      "Сталь конструкційна ВК8", "Сталь загартована Т15К6 HRC 35-50", "Сталь загартована Т30К4 HRC 35-50",
+                                      "Сталь загартована ВК6 HRC 35-50", "Сталь загартована ВК8 HRC 35-50",
+                                      "Сталь загартована ВК4 HRC 51-62", "Сталь загартована ВК6 HRC 51-62", "Сталь загартована ВК8 HRC 51-62",
+                                      "Чавун ВК8 HRC 35-50", "Чавун ВК6 HRC 35-50", "Чавун ВК4 HRC 35-50",
+                                      "Чавун ВК3 HRC 35-50", "Чавун Р18 HRC 51-62", "Чавун Р6М3 HRC 51-62",
+                                      "Мідь або алюніній Р6М5 HRC 35-50", "Мідь або алюніній ВК4 HRC 35-50",
+                                      "Мідь або алюніній ВК6 HRC 35-50", "Мідь або алюніній 9ХС HRC 35-50",
+                                      "Мідь або алюніній ХВГ HRC 51-62", "Мідь або алюніній У12А HRC 51-62",])
         parameters_layout.addRow(QLabel("Матеріал заготовки:"), self.material_combo)
 
         self.tool_type_combo = QComboBox()
@@ -42,7 +55,7 @@ class MillingApp(QWidget):
         parameters_layout.addRow(QLabel("Ширина фрезерування, мм:"), self.milling_width_input)
 
         self.milling_depth_input = QLineEdit()
-        parameters_layout.addRow(QLabel("Глибина фрезерування, мм:"), self.milling_depth_input)
+        parameters_layout.addRow(QLabel("Припуск на обробку, мм:"), self.milling_depth_input)
 
         self.surface_state_combo = QComboBox()
         self.surface_state_combo.addItems(["Без кірки", "Прокат з кіркою", "Поковка з кіркою", "Мідні та алюмінієві сплави з кіркою",
@@ -52,11 +65,10 @@ class MillingApp(QWidget):
         self.material_strength_input = QLineEdit()
         parameters_layout.addRow(QLabel("Межа міцності / твердість (МПа):"), self.material_strength_input)
 
-        self.machine_power_input = QLineEdit()
-        parameters_layout.addRow(QLabel("Потужність верстата (кВт):"), self.machine_power_input)
-
-        self.tool_lifetime_input = QLineEdit()
-        parameters_layout.addRow(QLabel("Період стійкості фрези (хв):"), self.tool_lifetime_input)
+        self.surface_state_combo = QComboBox()
+        self.surface_state_combo.addItems(
+            ["< 10 кВт", "> 10 кВт"])
+        parameters_layout.addRow(QLabel("Потужність верстата (кВт):"), self.surface_state_combo)
 
         parameters_group.setLayout(parameters_layout)
 
@@ -80,6 +92,9 @@ class MillingApp(QWidget):
         results_layout = QFormLayout()
 
         self.result_feed_rate = QLabel("-")
+        results_layout.addRow(QLabel("Глибина, мм:"), self.result_feed_rate)
+
+        self.result_feed_rate = QLabel("-")
         results_layout.addRow(QLabel("Подача, мм/хв:"), self.result_feed_rate)
 
         self.result_cutting_speed = QLabel("-")
@@ -96,3 +111,5 @@ class MillingApp(QWidget):
         main_layout.addWidget(results_group)
 
         self.setLayout(main_layout)
+
+        self.calculate_button = calculate_button
