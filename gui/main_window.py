@@ -1,7 +1,7 @@
 # gui/main_window.py
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton, QLineEdit,
-    QFormLayout, QGroupBox
+    QFormLayout, QGroupBox, QRadioButton, QButtonGroup, QHBoxLayout
 )
 
 class MillingApp(QWidget):
@@ -20,9 +20,9 @@ class MillingApp(QWidget):
         self.processing_type_combo.addItems(["Чорнова", "Напівчистова", "Чистова"])
         parameters_layout.addRow(QLabel("Тип обробки:"), self.processing_type_combo)
 
-        self.processing_type_combo = QComboBox()
-        self.processing_type_combo.addItems(["Фрезерування площин", "Фрезерування пазів", "Чистова"])
-        parameters_layout.addRow(QLabel("Тип операції:"), self.processing_type_combo)
+        self.operation_type_combo = QComboBox()
+        self.operation_type_combo.addItems(["Фрезерування площин", "Фрезерування пазів", "Чистова"])
+        parameters_layout.addRow(QLabel("Тип операції:"), self.operation_type_combo)
 
         self.material_combo = QComboBox()
         self.material_combo.addItems(["Сталь конструкційна Т5К12В", "Сталь конструкційна Т5К10", "Сталь конструкційна P18",
@@ -40,6 +40,19 @@ class MillingApp(QWidget):
         self.tool_type_combo = QComboBox()
         self.tool_type_combo.addItems(["Торцева", "Циліндрична", "Дискова", "Кінцева"])
         parameters_layout.addRow(QLabel("Тип фрези:"), self.tool_type_combo)
+
+        self.tooth_size_large = QRadioButton("Великий")
+        self.tooth_size_small = QRadioButton("Дрібний")
+
+        self.tooth_size_group = QButtonGroup()
+        self.tooth_size_group.addButton(self.tooth_size_large)
+        self.tooth_size_group.addButton(self.tooth_size_small)
+
+        tooth_size_layout = QHBoxLayout()
+        tooth_size_layout.addWidget(self.tooth_size_large)
+        tooth_size_layout.addWidget(self.tooth_size_small)
+
+        parameters_layout.addRow(QLabel("Розмір зуба фрези:"), tooth_size_layout)
 
         self.tool_material_combo = QComboBox()
         self.tool_material_combo.addItems(["Твердий сплав", "Швидкорізальна сталь"])
@@ -65,10 +78,19 @@ class MillingApp(QWidget):
         self.material_strength_input = QLineEdit()
         parameters_layout.addRow(QLabel("Межа міцності / твердість (МПа):"), self.material_strength_input)
 
-        self.surface_state_combo = QComboBox()
-        self.surface_state_combo.addItems(
-            ["< 10 кВт", "> 10 кВт"])
-        parameters_layout.addRow(QLabel("Потужність верстата (кВт):"), self.surface_state_combo)
+
+        self.workbench_power_less = QRadioButton("<5 кВт")
+        self.workbench_power_mid = QRadioButton("5-10 кВт")
+        self.workbench_power_more = QRadioButton(">10 кВт")
+        self.workbench_power_group = QButtonGroup()
+        self.workbench_power_group.addButton(self.workbench_power_less)
+        self.workbench_power_group.addButton(self.workbench_power_mid)
+        self.workbench_power_group.addButton(self.workbench_power_more)
+        workbench_power_layout = QHBoxLayout()
+        workbench_power_layout.addWidget(self.workbench_power_less)
+        workbench_power_layout.addWidget(self.workbench_power_mid)
+        workbench_power_layout.addWidget(self.workbench_power_more)
+        parameters_layout.addRow(QLabel("Потужність верстата (кВт):"), workbench_power_layout)
 
         parameters_group.setLayout(parameters_layout)
 
@@ -91,8 +113,8 @@ class MillingApp(QWidget):
         results_group = QGroupBox("Результати розрахунку")
         results_layout = QFormLayout()
 
-        self.result_feed_rate = QLabel("-")
-        results_layout.addRow(QLabel("Глибина, мм:"), self.result_feed_rate)
+        self.result_depth = QLabel("-")
+        results_layout.addRow(QLabel("Глибина, мм:"), self.result_depth)
 
         self.result_feed_rate = QLabel("-")
         results_layout.addRow(QLabel("Подача, мм/хв:"), self.result_feed_rate)
