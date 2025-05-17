@@ -2,7 +2,7 @@
 
 from PySide6.QtGui import QPalette, QColor
 from PySide6.QtWidgets import QMessageBox
-from logic.query_db import get_feed_A1, get_feed_A2
+from logic.query_db import get_feed_A1, get_feed_A2, get_feed_A3
 
 class MillingCalculator:
     def __init__(self, window):
@@ -18,9 +18,9 @@ class MillingCalculator:
         self.window.milling_width_input.textEdited.connect(lambda: self.clear_error(self.window.milling_width_input))
         self.window.tool_diameter_input.textEdited.connect(lambda: self.clear_error(self.window.tool_diameter_input))
         self.window.milling_depth_input.textEdited.connect(lambda: self.clear_error(self.window.milling_depth_input))
-        self.window.length_input.textEdited.connect(lambda: self.clear_error(self.window.length_input))
+        """self.window.length_input.textEdited.connect(lambda: self.clear_error(self.window.length_input))
         self.window.width_input.textEdited.connect(lambda: self.clear_error(self.window.width_input))
-        self.window.height_input.textEdited.connect(lambda: self.clear_error(self.window.height_input))
+        self.window.height_input.textEdited.connect(lambda: self.clear_error(self.window.height_input))"""
         self.window.teeth_number_input.textEdited.connect(lambda: self.clear_error(self.window.teeth_number_input))
 
     def tool_diameter_check(self):
@@ -101,6 +101,7 @@ class MillingCalculator:
         processing_type = self.window.processing_type_combo.currentText()
         tool_type = self.window.tool_type_combo.currentText()
         tool_material = self.window.tool_material_combo.currentText()
+        tool_diameter = self.window.tool_diameter_input.text()
         material = self.window.material_combo.currentText()
         workbench_power_less = self.window.workbench_power_less.isChecked()
         workbench_power_mid = self.window.workbench_power_mid.isChecked()
@@ -121,13 +122,24 @@ class MillingCalculator:
                 feed = get_feed_A1(material, x)
                 self.window.result_feed_rate.setText(str(feed))
 
-        if (processing_type == "Чорнова"
+        elif (processing_type == "Чорнова"
             and tool_material == "Швидкорізальна сталь"
             and tool_type in ["Торцева", "Циліндрична", "Дискова"]):
 
             feed = get_feed_A2(material, workbench_power_less, workbench_power_mid, workbench_power_more, tooth_size_large, tooth_size_small, tool_type)
             self.window.result_feed_rate.setText(str(feed))
 
+        elif (processing_type == "Чистова"
+            and tool_material in ["Швидкорізальна сталь", "Твердий сплав"]
+            and tool_type in ["Торцева", "Циліндрична", "Дискова"]):
+
+            feed = get_feed_A3(material, tool_type, tool_diameter, tool_material)
+            self.window.result_feed_rate.setText(str(feed))
+
+        elif (processing_type == "Чорнова"
+            and tool_material == "Твердий сплав"
+            and tool_type in ["Торцева", "Циліндрична", "Дискова"]):
+            pass
 
 
     def set_input_errors(self, input_widgets):

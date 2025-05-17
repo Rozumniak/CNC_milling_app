@@ -93,7 +93,7 @@ class MillingApp(QWidget):
         parameters_layout.addRow(QLabel("Потужність верстата (кВт):"), workbench_power_layout)
 
         parameters_group.setLayout(parameters_layout)
-
+        """
         size_group = QGroupBox("Розміри заготовки (мм)")
         size_layout = QFormLayout()
 
@@ -106,29 +106,29 @@ class MillingApp(QWidget):
         self.height_input = QLineEdit()
         size_layout.addRow(QLabel("Висота:"), self.height_input)
 
-        size_group.setLayout(size_layout)
+        size_group.setLayout(size_layout)"""
 
         calculate_button = QPushButton("Розрахувати")
 
         results_group = QGroupBox("Результати розрахунку")
         results_layout = QFormLayout()
 
-        self.result_depth = QLabel("-")
+        self.result_depth = QLabel("1")
         results_layout.addRow(QLabel("Глибина, мм:"), self.result_depth)
 
-        self.result_feed_rate = QLabel("-")
+        self.result_feed_rate = QLabel("0,32")
         results_layout.addRow(QLabel("Подача, мм/хв:"), self.result_feed_rate)
 
-        self.result_cutting_speed = QLabel("-")
+        self.result_cutting_speed = QLabel("50")
         results_layout.addRow(QLabel("Швидкість різання, м/хв:"), self.result_cutting_speed)
 
-        self.result_spindle_speed = QLabel("-")
+        self.result_spindle_speed = QLabel("5600")
         results_layout.addRow(QLabel("Частота обертання, об/хв:"), self.result_spindle_speed)
 
         results_group.setLayout(results_layout)
 
         main_layout.addWidget(parameters_group)
-        main_layout.addWidget(size_group)
+        """main_layout.addWidget(size_group)"""
         main_layout.addWidget(calculate_button)
         main_layout.addWidget(results_group)
 
