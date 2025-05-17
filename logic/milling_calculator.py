@@ -2,7 +2,7 @@
 
 from PySide6.QtGui import QPalette, QColor
 from PySide6.QtWidgets import QMessageBox
-from logic.query_db import get_feed_A1, get_feed_A2, get_feed_A3
+from logic.query_db import get_feed_A1, get_feed_A2, get_feed_A3, get_feed_A4
 
 class MillingCalculator:
     def __init__(self, window):
@@ -108,6 +108,8 @@ class MillingCalculator:
         workbench_power_more = self.window.workbench_power_more.isChecked()
         tooth_size_large = self.window.tooth_size_large.isChecked()
         tooth_size_small = self.window.tooth_size_small.isChecked()
+        cutting_element = self.window.cutting_element_combo.currentText()
+        depth = float(self.window.result_depth.text())
 
         if (processing_type == "Чорнова"
             and tool_material == "Твердий сплав"
@@ -138,8 +140,15 @@ class MillingCalculator:
 
         elif (processing_type == "Чорнова"
             and tool_material == "Твердий сплав"
-            and tool_type in ["Торцева", "Циліндрична", "Дискова"]):
-            pass
+            and tool_type == "Кінцева"):
+            feed = get_feed_A4(cutting_element, tool_diameter, depth)
+            self.window.result_feed_rate.setText(str(feed))
+
+        elif (processing_type == "Чистова"
+            and tool_material == "Твердий сплав"
+            and tool_type == "Кінцева"):
+            feed = get_feed_A4(cutting_element, tool_diameter, depth)
+            self.window.result_feed_rate.setText(str(feed))
 
 
     def set_input_errors(self, input_widgets):
@@ -154,10 +163,7 @@ class MillingCalculator:
         fields = [
             self.window.milling_width_input,
             self.window.tool_diameter_input,
-            self.window.milling_depth_input,
-            self.window.length_input,
-            self.window.width_input,
-            self.window.height_input
+            self.window.milling_depth_input
         ]
         for widget in fields:
             palette = widget.palette()

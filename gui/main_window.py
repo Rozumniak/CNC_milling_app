@@ -17,7 +17,7 @@ class MillingApp(QWidget):
         parameters_layout = QFormLayout()
 
         self.processing_type_combo = QComboBox()
-        self.processing_type_combo.addItems(["Чорнова", "Напівчистова", "Чистова"])
+        self.processing_type_combo.addItems(["Чорнова", "Чистова"])
         parameters_layout.addRow(QLabel("Тип обробки:"), self.processing_type_combo)
 
         self.operation_type_combo = QComboBox()
@@ -41,22 +41,45 @@ class MillingApp(QWidget):
         self.tool_type_combo.addItems(["Торцева", "Циліндрична", "Дискова", "Кінцева"])
         parameters_layout.addRow(QLabel("Тип фрези:"), self.tool_type_combo)
 
+        self.tooth_size_label = QLabel("Розмір зуба фрези:")
         self.tooth_size_large = QRadioButton("Великий")
         self.tooth_size_small = QRadioButton("Дрібний")
-
         self.tooth_size_group = QButtonGroup()
         self.tooth_size_group.addButton(self.tooth_size_large)
         self.tooth_size_group.addButton(self.tooth_size_small)
-
         tooth_size_layout = QHBoxLayout()
         tooth_size_layout.addWidget(self.tooth_size_large)
         tooth_size_layout.addWidget(self.tooth_size_small)
+        parameters_layout.addRow(self.tooth_size_label, tooth_size_layout)
 
-        parameters_layout.addRow(QLabel("Розмір зуба фрези:"), tooth_size_layout)
+        self.tooth_size_label.setVisible(False)
+        self.tooth_size_large.setVisible(False)
+        self.tooth_size_small.setVisible(False)
+        self.processing_type_combo.currentTextChanged.connect(self.update_visibility)
+        self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
 
+
+        self.tool_material_label = QLabel("Матеріал фрези:")
         self.tool_material_combo = QComboBox()
         self.tool_material_combo.addItems(["Твердий сплав", "Швидкорізальна сталь"])
-        parameters_layout.addRow(QLabel("Матеріал фрези:"), self.tool_material_combo)
+        parameters_layout.addRow(self.tool_material_label, self.tool_material_combo)
+
+        self.tool_material_combo.setVisible(True)
+        self.tool_material_label.setVisible(True)
+        self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
+        self.tool_material_combo.currentTextChanged.connect(self.update_visibility)
+
+        self.cutting_element_label = QLabel("Вид різального елементу:")
+        self.cutting_element_combo = QComboBox()
+        self.cutting_element_combo.addItems(["Коронка", "Гвинтові пластинки"])
+        parameters_layout.addRow(self.cutting_element_label, self.cutting_element_combo)
+        self.cutting_element_label.setVisible(False)
+        self.cutting_element_combo.setVisible(False)
+
+        self.processing_type_combo.currentTextChanged.connect(self.update_visibility)
+        self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
+        self.tool_material_combo.currentTextChanged.connect(self.update_visibility)
+
 
         self.tool_diameter_input = QLineEdit()
         parameters_layout.addRow(QLabel("Діаметр фрези, мм:"), self.tool_diameter_input)
@@ -113,16 +136,16 @@ class MillingApp(QWidget):
         results_group = QGroupBox("Результати розрахунку")
         results_layout = QFormLayout()
 
-        self.result_depth = QLabel("1")
+        self.result_depth = QLabel("-")
         results_layout.addRow(QLabel("Глибина, мм:"), self.result_depth)
 
-        self.result_feed_rate = QLabel("0,32")
+        self.result_feed_rate = QLabel("-")
         results_layout.addRow(QLabel("Подача, мм/хв:"), self.result_feed_rate)
 
-        self.result_cutting_speed = QLabel("50")
+        self.result_cutting_speed = QLabel("-")
         results_layout.addRow(QLabel("Швидкість різання, м/хв:"), self.result_cutting_speed)
 
-        self.result_spindle_speed = QLabel("5600")
+        self.result_spindle_speed = QLabel("-")
         results_layout.addRow(QLabel("Частота обертання, об/хв:"), self.result_spindle_speed)
 
         results_group.setLayout(results_layout)
@@ -135,3 +158,22 @@ class MillingApp(QWidget):
         self.setLayout(main_layout)
 
         self.calculate_button = calculate_button
+
+    def update_visibility(self):
+        is_roughing = self.processing_type_combo.currentText() == "Чорнова"
+        is_end_mill = self.tool_type_combo.currentText() == "Кінцева"
+        is_carbide = self.tool_material_combo.currentText() == "Твердий сплав"
+
+        cutting_element_visible = is_roughing and is_end_mill and is_carbide
+        self.cutting_element_label.setVisible(cutting_element_visible)
+        self.cutting_element_combo.setVisible(cutting_element_visible)
+
+        is_end_mill_2 = self.tool_type_combo.currentText() in ["Торцева", "Циліндрична", "Дискова"]
+        self.tool_material_combo.setVisible(is_end_mill_2)
+        self.tool_material_label.setVisible(is_end_mill_2)
+
+        is_tool_material = self.tool_material_combo.currentText() == "Швидкорізальна сталь"
+        tooth_size_visible = is_roughing and is_tool_material and is_end_mill_2
+        self.tooth_size_label.setVisible(tooth_size_visible)
+        self.tooth_size_large.setVisible(tooth_size_visible)
+        self.tooth_size_small.setVisible(tooth_size_visible)

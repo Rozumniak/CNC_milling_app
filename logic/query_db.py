@@ -175,7 +175,6 @@ def get_feed_A3(material, tool_type, tool_diameter, tool_material):
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    print(tool_type)
     if tool_type == "Торцеві і дискові":
         # Пошук без урахування діаметра
         query = """
@@ -199,7 +198,6 @@ def get_feed_A3(material, tool_type, tool_diameter, tool_material):
           AND CAST(SUBSTR(diameter_range, INSTR(diameter_range, '-') + 1) AS INTEGER) >= ?
         """
         cursor.execute(query, (tool_type, material, diameter, diameter))
-        print("Executing query with:", tool_type, material, diameter)
 
     else:
         conn.close()
@@ -210,5 +208,18 @@ def get_feed_A3(material, tool_type, tool_diameter, tool_material):
 
     return result if result else None
 
-def get_feed_A4(material, tool_type, tool_diameter, tool_material):
-    pass
+def get_feed_A4(cutting_element, tool_diameter, depth):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    query = """
+        SELECT feed_min, feed_max
+        FROM A4_feeds
+        WHERE cutter_type = ?
+          AND ? BETWEEN diameter_min AND diameter_max
+          AND ? BETWEEN depth_min AND depth_max
+    """
+    cursor.execute(query, (cutting_element, tool_diameter, depth))
+    result = cursor.fetchone()
+    conn.close()
+
+    return result if result else None
