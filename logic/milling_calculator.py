@@ -2,7 +2,8 @@
 
 from PySide6.QtGui import QPalette, QColor
 from PySide6.QtWidgets import QMessageBox
-from logic.query_db import get_feed_A1, get_feed_A2, get_feed_A3, get_feed_A4
+from logic.query_db import get_feed_A1, get_feed_A2, get_feed_A3, get_feed_A4, get_feed_A5, get_cutting_speeds_A6, get_tool_life_A8, get_Knv, get_Kuv
+
 
 class MillingCalculator:
     def __init__(self, window):
@@ -10,10 +11,13 @@ class MillingCalculator:
         self.connect_signals()
 
     def connect_signals(self):
+        self.window.calculate_button.clicked.connect(self.clear_result)
         self.window.calculate_button.clicked.connect(self.clear_all_errors)
         self.window.calculate_button.clicked.connect(self.tool_diameter_check)
         self.window.calculate_button.clicked.connect(self.depth_calculation)
         self.window.calculate_button.clicked.connect(self.feed_calculation)
+        self.window.calculate_button.clicked.connect(self.speed_calculation)
+
 
         self.window.milling_width_input.textEdited.connect(lambda: self.clear_error(self.window.milling_width_input))
         self.window.tool_diameter_input.textEdited.connect(lambda: self.clear_error(self.window.tool_diameter_input))
@@ -96,7 +100,6 @@ class MillingCalculator:
         elif processing_type == "Чистова":
             self.window.result_depth.setText("1.0")
 
-
     def feed_calculation(self):
         processing_type = self.window.processing_type_combo.currentText()
         tool_type = self.window.tool_type_combo.currentText()
@@ -108,7 +111,7 @@ class MillingCalculator:
         workbench_power_more = self.window.workbench_power_more.isChecked()
         tooth_size_large = self.window.tooth_size_large.isChecked()
         tooth_size_small = self.window.tooth_size_small.isChecked()
-        cutting_element = self.window.cutting_element_combo.currentText()
+        cutting_element = self.window.tool_subtype_2_combo.currentText()
         depth = float(self.window.result_depth.text())
 
         if (processing_type == "Чорнова"
@@ -139,16 +142,74 @@ class MillingCalculator:
             self.window.result_feed_rate.setText(str(feed))
 
         elif (processing_type == "Чорнова"
-            and tool_material == "Твердий сплав"
             and tool_type == "Кінцева"):
+
+            cutting_element_map = {
+                "З коронками": "Коронка",
+                "Цілісна": "Коронка",
+                "З напаяними пластинами": "Гвинтові пластинки"
+            }
+
+            if cutting_element in cutting_element_map:
+                cutting_element = cutting_element_map[cutting_element]
+            else:
+                return None
+
             feed = get_feed_A4(cutting_element, tool_diameter, depth)
             self.window.result_feed_rate.setText(str(feed))
 
         elif (processing_type == "Чистова"
-            and tool_material == "Твердий сплав"
             and tool_type == "Кінцева"):
-            feed = get_feed_A4(cutting_element, tool_diameter, depth)
+            feed = get_feed_A5(tool_diameter)
             self.window.result_feed_rate.setText(str(feed))
+
+    def speed_calculation(self):
+        material = self.window.material_combo.currentText()
+        material_strength = float(self.window.material_strength_input.text())
+        tool_type = self.window.tool_type_combo.currentText()
+        tool_material = self.window.tool_material_combo.currentText()
+        milling_width = float(self.window.milling_width_input.text())
+        depth = float(self.window.result_depth.text())
+        feed = float(self.window.result_feed_rate.text())
+        tool_diameter = self.window.tool_diameter_input.text()
+        teeth_number = float(self.window.teeth_number_input.text())
+        surface_state = self.window.surface_state_combo.currentText()
+
+        if (tool_type == "Дискова"):
+            tool_subtype = self.window.tool_subtype_1_combo.currentText()
+        elif (tool_type == "Кінцева"):
+            tool_subtype = self.window.tool_subtype_2_combo.currentText()
+
+        if (tool_type == "Торцева"):
+            tool_subtype = None
+        if (tool_type == "Циліндрична"):
+            tool_subtype = None
+        power = get_cutting_speeds_A6(material, material_strength, tool_type, tool_subtype, tool_material,
+                                      milling_width, depth, feed)
+
+
+        if power is not None:
+            Cv = power[0]
+            q = power[1]
+            m = power[2]
+            x = power[3]
+            y = power[4]
+            u = power[5]
+            p = power[6]
+
+        Knv = get_Knv(surface_state)
+        Kuv = get_Kuv(material)
+
+        Kv = Knv * Kuv
+
+        tool_life = get_tool_life_A8(tool_type, tool_diameter)
+        print(tool_life)
+
+        Vp = ((Cv * (float(tool_diameter) ** q)) / ((tool_life ** m) * (depth ** x) * (feed ** y) * (milling_width ** u) * (teeth_number ** p))) * Kv
+
+
+
+        self.window.result_cutting_speed.setText(str(Vp))
 
 
     def set_input_errors(self, input_widgets):
@@ -184,3 +245,9 @@ class MillingCalculator:
         msg.setText(message)
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec()
+
+    def clear_result(self):
+        self.window.result_depth.setText("-")
+        self.window.result_feed_rate.setText("-")
+        self.window.result_cutting_speed.setText("-")
+        self.window.result_spindle_speed.setText("-")

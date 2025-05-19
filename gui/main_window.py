@@ -20,10 +20,6 @@ class MillingApp(QWidget):
         self.processing_type_combo.addItems(["Чорнова", "Чистова"])
         parameters_layout.addRow(QLabel("Тип обробки:"), self.processing_type_combo)
 
-        self.operation_type_combo = QComboBox()
-        self.operation_type_combo.addItems(["Фрезерування площин", "Фрезерування пазів", "Чистова"])
-        parameters_layout.addRow(QLabel("Тип операції:"), self.operation_type_combo)
-
         self.material_combo = QComboBox()
         self.material_combo.addItems(["Сталь конструкційна Т5К12В", "Сталь конструкційна Т5К10", "Сталь конструкційна P18",
                                       "Сталь конструкційна Т15К6", "Сталь конструкційна Р6М5", "Сталь конструкційна Т30К4",
@@ -41,6 +37,35 @@ class MillingApp(QWidget):
         self.tool_type_combo.addItems(["Торцева", "Циліндрична", "Дискова", "Кінцева"])
         parameters_layout.addRow(QLabel("Тип фрези:"), self.tool_type_combo)
 
+        self.tool_subtype_1_label = QLabel("Вид фрези:")
+        self.tool_subtype_1_combo = QComboBox()
+        self.tool_subtype_1_combo.addItems(["Зі вставними ножами", "Цілісна"])
+        parameters_layout.addRow(self.tool_subtype_1_label, self.tool_subtype_1_combo)
+
+        self.tool_subtype_2_label = QLabel("Вид фрези:")
+        self.tool_subtype_2_combo = QComboBox()
+        self.tool_subtype_2_combo.addItems(["З коронками", "З напаяними пластинами", "Цілісна"])
+        parameters_layout.addRow(self.tool_subtype_2_label, self.tool_subtype_2_combo)
+
+        self.tool_subtype_1_label.setVisible(False)
+        self.tool_subtype_1_combo.setVisible(False)
+        self.tool_subtype_2_label.setVisible(False)
+        self.tool_subtype_2_combo.setVisible(False)
+        self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
+
+
+
+
+        self.tool_material_label = QLabel("Матеріал фрези:")
+        self.tool_material_combo = QComboBox()
+        self.tool_material_combo.addItems(["Твердий сплав", "Швидкорізальна сталь"])
+        parameters_layout.addRow(self.tool_material_label, self.tool_material_combo)
+
+        self.tool_material_combo.setVisible(True)
+        self.tool_material_label.setVisible(True)
+        self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
+        self.tool_material_combo.currentTextChanged.connect(self.update_visibility)
+
         self.tooth_size_label = QLabel("Розмір зуба фрези:")
         self.tooth_size_large = QRadioButton("Великий")
         self.tooth_size_small = QRadioButton("Дрібний")
@@ -57,24 +82,6 @@ class MillingApp(QWidget):
         self.tooth_size_small.setVisible(False)
         self.processing_type_combo.currentTextChanged.connect(self.update_visibility)
         self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
-
-
-        self.tool_material_label = QLabel("Матеріал фрези:")
-        self.tool_material_combo = QComboBox()
-        self.tool_material_combo.addItems(["Твердий сплав", "Швидкорізальна сталь"])
-        parameters_layout.addRow(self.tool_material_label, self.tool_material_combo)
-
-        self.tool_material_combo.setVisible(True)
-        self.tool_material_label.setVisible(True)
-        self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
-        self.tool_material_combo.currentTextChanged.connect(self.update_visibility)
-
-        self.cutting_element_label = QLabel("Вид різального елементу:")
-        self.cutting_element_combo = QComboBox()
-        self.cutting_element_combo.addItems(["Коронка", "Гвинтові пластинки"])
-        parameters_layout.addRow(self.cutting_element_label, self.cutting_element_combo)
-        self.cutting_element_label.setVisible(False)
-        self.cutting_element_combo.setVisible(False)
 
         self.processing_type_combo.currentTextChanged.connect(self.update_visibility)
         self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
@@ -98,10 +105,14 @@ class MillingApp(QWidget):
                                            "Сталеві та чавунні відливання з нормальною кіркою", "Сталеві та чавунні відливання з забрудненою кіркою"])
         parameters_layout.addRow(QLabel("Стан поверхні заготовки:"), self.surface_state_combo)
 
+        self.material_strength_label = QLabel("Межа міцності / твердість (МПа):")
         self.material_strength_input = QLineEdit()
-        parameters_layout.addRow(QLabel("Межа міцності / твердість (МПа):"), self.material_strength_input)
+        parameters_layout.addRow(self.material_strength_label, self.material_strength_input)
+        self.material_strength_label.setVisible(True)
+        self.material_strength_input.setVisible(True)
+        self.material_combo.currentTextChanged.connect(self.update_visibility)
 
-
+        self.workbench_power_label = QLabel("Потужність верстата (кВт):")
         self.workbench_power_less = QRadioButton("<5 кВт")
         self.workbench_power_mid = QRadioButton("5-10 кВт")
         self.workbench_power_more = QRadioButton(">10 кВт")
@@ -113,7 +124,14 @@ class MillingApp(QWidget):
         workbench_power_layout.addWidget(self.workbench_power_less)
         workbench_power_layout.addWidget(self.workbench_power_mid)
         workbench_power_layout.addWidget(self.workbench_power_more)
-        parameters_layout.addRow(QLabel("Потужність верстата (кВт):"), workbench_power_layout)
+        parameters_layout.addRow(self.workbench_power_label, workbench_power_layout)
+
+        self.workbench_power_label.setVisible(True)
+        self.workbench_power_less.setVisible(True)
+        self.workbench_power_mid.setVisible(True)
+        self.workbench_power_more.setVisible(True)
+        self.processing_type_combo.currentTextChanged.connect(self.update_visibility)
+        self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
 
         parameters_group.setLayout(parameters_layout)
         """
@@ -140,7 +158,9 @@ class MillingApp(QWidget):
         results_layout.addRow(QLabel("Глибина, мм:"), self.result_depth)
 
         self.result_feed_rate = QLabel("-")
-        results_layout.addRow(QLabel("Подача, мм/хв:"), self.result_feed_rate)
+        self.feed_rate_label = QLabel("Подача на зуб, мм/зуб:")
+        self.processing_type_combo.currentTextChanged.connect(self.update_text)
+        results_layout.addRow(self.feed_rate_label, self.result_feed_rate)
 
         self.result_cutting_speed = QLabel("-")
         results_layout.addRow(QLabel("Швидкість різання, м/хв:"), self.result_cutting_speed)
@@ -159,14 +179,46 @@ class MillingApp(QWidget):
 
         self.calculate_button = calculate_button
 
+        self.material_category_map = {
+            "Сталь конструкційна Т5К12В": "Сталь та чавун",
+            "Сталь конструкційна Т5К10": "Сталь та чавун",
+            "Сталь конструкційна P18": "Сталь та чавун",
+            "Сталь конструкційна Т15К6": "Сталь та чавун",
+            "Сталь конструкційна Р6М5": "Сталь та чавун",
+            "Сталь конструкційна Т30К4": "Сталь та чавун",
+            "Сталь конструкційна ВК8": "Сталь та чавун",
+            "Сталь загартована Т15К6 HRC 35-50": "Сталь та чавун",
+            "Сталь загартована Т30К4 HRC 35-50": "Сталь та чавун",
+            "Сталь загартована ВК6 HRC 35-50": "Сталь та чавун",
+            "Сталь загартована ВК8 HRC 35-50": "Сталь та чавун",
+            "Сталь загартована ВК4 HRC 51-62": "Сталь та чавун",
+            "Сталь загартована ВК6 HRC 51-62": "Сталь та чавун",
+            "Сталь загартована ВК8 HRC 51-62": "Сталь та чавун",
+
+            "Чавун ВК8 HRC 35-50": "Сталь та чавун",
+            "Чавун ВК6 HRC 35-50": "Сталь та чавун",
+            "Чавун ВК4 HRC 35-50": "Сталь та чавун",
+            "Чавун ВК3 HRC 35-50": "Сталь та чавун",
+            "Чавун Р18 HRC 51-62": "Сталь та чавун",
+            "Чавун Р6М3 HRC 51-62": "Сталь та чавун",
+
+            "Мідь або алюніній Р6М5 HRC 35-50": "Мідь та алюміній",
+            "Мідь або алюніній ВК4 HRC 35-50": "Мідь та алюміній",
+            "Мідь або алюніній ВК6 HRC 35-50": "Мідь та алюміній",
+            "Мідь або алюніній 9ХС HRC 35-50": "Мідь та алюміній",
+            "Мідь або алюніній ХВГ HRC 51-62": "Мідь та алюміній",
+            "Мідь або алюніній У12А HRC 51-62": "Мідь та алюміній",
+        }
+    def update_text(self):
+
+        is_roughing = self.processing_type_combo.currentText() == "Чорнова"
+        if (is_roughing):
+            self.feed_rate_label.setText("Подача на зуб, мм/зуб:")
+        else:
+            self.feed_rate_label.setText("Подача на оберт, мм/об:")
+
     def update_visibility(self):
         is_roughing = self.processing_type_combo.currentText() == "Чорнова"
-        is_end_mill = self.tool_type_combo.currentText() == "Кінцева"
-        is_carbide = self.tool_material_combo.currentText() == "Твердий сплав"
-
-        cutting_element_visible = is_roughing and is_end_mill and is_carbide
-        self.cutting_element_label.setVisible(cutting_element_visible)
-        self.cutting_element_combo.setVisible(cutting_element_visible)
 
         is_end_mill_2 = self.tool_type_combo.currentText() in ["Торцева", "Циліндрична", "Дискова"]
         self.tool_material_combo.setVisible(is_end_mill_2)
@@ -177,3 +229,34 @@ class MillingApp(QWidget):
         self.tooth_size_label.setVisible(tooth_size_visible)
         self.tooth_size_large.setVisible(tooth_size_visible)
         self.tooth_size_small.setVisible(tooth_size_visible)
+
+        is_workbench_power = is_roughing and is_end_mill_2
+        self.workbench_power_label.setVisible(is_workbench_power)
+        self.workbench_power_less.setVisible(is_workbench_power)
+        self.workbench_power_mid.setVisible(is_workbench_power)
+        self.workbench_power_more.setVisible(is_workbench_power)
+
+        material = self.material_category_map[self.material_combo.currentText()]
+        if (material == "Мідь та алюміній"):
+            self.material_strength_label.setVisible(False)
+            self.material_strength_input.setVisible(False)
+        else:
+            self.material_strength_label.setVisible(True)
+            self.material_strength_input.setVisible(True)
+
+        if (self.tool_type_combo.currentText() == "Дискова"):
+            self.tool_subtype_1_label.setVisible(True)
+            self.tool_subtype_1_combo.setVisible(True)
+            self.tool_subtype_2_label.setVisible(False)
+            self.tool_subtype_2_combo.setVisible(False)
+
+        elif (self.tool_type_combo.currentText() == "Кінцева"):
+            self.tool_subtype_1_label.setVisible(False)
+            self.tool_subtype_1_combo.setVisible(False)
+            self.tool_subtype_2_label.setVisible(True)
+            self.tool_subtype_2_combo.setVisible(True)
+        else:
+            self.tool_subtype_1_label.setVisible(False)
+            self.tool_subtype_1_combo.setVisible(False)
+            self.tool_subtype_2_label.setVisible(False)
+            self.tool_subtype_2_combo.setVisible(False)
