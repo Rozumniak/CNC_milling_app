@@ -3,6 +3,8 @@ from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton, QLineEdit,
     QFormLayout, QGroupBox, QRadioButton, QButtonGroup, QHBoxLayout
 )
+from PySide6.QtGui import QIntValidator
+
 
 class MillingApp(QWidget):
     def __init__(self):
@@ -28,9 +30,13 @@ class MillingApp(QWidget):
                                       "Сталь загартована ВК4 HRC 51-62", "Сталь загартована ВК6 HRC 51-62", "Сталь загартована ВК8 HRC 51-62",
                                       "Чавун ВК8 HRC 35-50", "Чавун ВК6 HRC 35-50", "Чавун ВК4 HRC 35-50",
                                       "Чавун ВК3 HRC 35-50", "Чавун Р18 HRC 51-62", "Чавун Р6М3 HRC 51-62",
-                                      "Мідь або алюніній Р6М5 HRC 35-50", "Мідь або алюніній ВК4 HRC 35-50",
-                                      "Мідь або алюніній ВК6 HRC 35-50", "Мідь або алюніній 9ХС HRC 35-50",
-                                      "Мідь або алюніній ХВГ HRC 51-62", "Мідь або алюніній У12А HRC 51-62",])
+                                      "Мідь Р6М5 HRC 35-50", "Мідь ВК4 HRC 35-50",
+                                      "Мідь ВК6 HRC 35-50", "Мідь 9ХС HRC 35-50",
+                                      "Мідь ХВГ HRC 51-62", "Мідь У12А HRC 51-62",
+                                      "Алюміній Р6М5 HRC 35-50", "Алюміній ВК4 HRC 35-50",
+                                      "Алюміній ВК6 HRC 35-50", "Алюміній 9ХС HRC 35-50",
+                                      "Алюміній ХВГ HRC 51-62", "Алюміній У12А HRC 51-62",
+                                      ])
         parameters_layout.addRow(QLabel("Матеріал заготовки:"), self.material_combo)
 
         self.tool_type_combo = QComboBox()
@@ -61,11 +67,6 @@ class MillingApp(QWidget):
         self.tool_material_combo.addItems(["Твердий сплав", "Швидкорізальна сталь"])
         parameters_layout.addRow(self.tool_material_label, self.tool_material_combo)
 
-        self.tool_material_combo.setVisible(True)
-        self.tool_material_label.setVisible(True)
-        self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
-        self.tool_material_combo.currentTextChanged.connect(self.update_visibility)
-
         self.tooth_size_label = QLabel("Розмір зуба фрези:")
         self.tooth_size_large = QRadioButton("Великий")
         self.tooth_size_small = QRadioButton("Дрібний")
@@ -90,15 +91,19 @@ class MillingApp(QWidget):
 
         self.tool_diameter_input = QLineEdit()
         parameters_layout.addRow(QLabel("Діаметр фрези, мм:"), self.tool_diameter_input)
+        self.tool_diameter_input.setValidator(QIntValidator(0, 9999))
 
         self.teeth_number_input = QLineEdit()
         parameters_layout.addRow(QLabel("Кількість зубів фрези:"), self.teeth_number_input)
+        self.teeth_number_input.setValidator(QIntValidator(0, 9999))
 
         self.milling_width_input = QLineEdit()
         parameters_layout.addRow(QLabel("Ширина фрезерування, мм:"), self.milling_width_input)
+        self.milling_width_input.setValidator(QIntValidator(0, 9999))
 
         self.milling_depth_input = QLineEdit()
         parameters_layout.addRow(QLabel("Припуск на обробку, мм:"), self.milling_depth_input)
+        self.milling_depth_input.setValidator(QIntValidator(0, 9999))
 
         self.surface_state_combo = QComboBox()
         self.surface_state_combo.addItems(["Без кірки", "Прокат з кіркою", "Поковка з кіркою", "Мідні та алюмінієві сплави з кіркою",
@@ -107,6 +112,7 @@ class MillingApp(QWidget):
 
         self.material_strength_label = QLabel("Межа міцності / твердість (МПа):")
         self.material_strength_input = QLineEdit()
+        self.material_strength_input.setValidator(QIntValidator(0, 9999))
         parameters_layout.addRow(self.material_strength_label, self.material_strength_input)
         self.material_strength_label.setVisible(True)
         self.material_strength_input.setVisible(True)
@@ -134,26 +140,9 @@ class MillingApp(QWidget):
         self.tool_type_combo.currentTextChanged.connect(self.update_visibility)
 
         parameters_group.setLayout(parameters_layout)
-        """
-        size_group = QGroupBox("Розміри заготовки (мм)")
-        size_layout = QFormLayout()
-
-        self.length_input = QLineEdit()
-        size_layout.addRow(QLabel("Довжина:"), self.length_input)
-
-        self.width_input = QLineEdit()
-        size_layout.addRow(QLabel("Ширина:"), self.width_input)
-
-        self.height_input = QLineEdit()
-        size_layout.addRow(QLabel("Висота:"), self.height_input)
-
-        size_group.setLayout(size_layout)"""
-
         calculate_button = QPushButton("Розрахувати")
-
         results_group = QGroupBox("Результати розрахунку")
         results_layout = QFormLayout()
-
         self.result_depth = QLabel("-")
         results_layout.addRow(QLabel("Глибина, мм:"), self.result_depth)
 
@@ -168,10 +157,12 @@ class MillingApp(QWidget):
         self.result_spindle_speed = QLabel("-")
         results_layout.addRow(QLabel("Частота обертання, об/хв:"), self.result_spindle_speed)
 
+        self.machines = QLabel(" ")
+        results_layout.addRow(QLabel("Рекомендовані верстати:"), self.machines)
+
         results_group.setLayout(results_layout)
 
         main_layout.addWidget(parameters_group)
-        """main_layout.addWidget(size_group)"""
         main_layout.addWidget(calculate_button)
         main_layout.addWidget(results_group)
 
@@ -202,12 +193,18 @@ class MillingApp(QWidget):
             "Чавун Р18 HRC 51-62": "Сталь та чавун",
             "Чавун Р6М3 HRC 51-62": "Сталь та чавун",
 
-            "Мідь або алюніній Р6М5 HRC 35-50": "Мідь та алюміній",
-            "Мідь або алюніній ВК4 HRC 35-50": "Мідь та алюміній",
-            "Мідь або алюніній ВК6 HRC 35-50": "Мідь та алюміній",
-            "Мідь або алюніній 9ХС HRC 35-50": "Мідь та алюміній",
-            "Мідь або алюніній ХВГ HRC 51-62": "Мідь та алюміній",
-            "Мідь або алюніній У12А HRC 51-62": "Мідь та алюміній",
+            "Мідь Р6М5 HRC 35-50": "Мідь та алюміній",
+            "Мідь ВК4 HRC 35-50": "Мідь та алюміній",
+            "Мідь ВК6 HRC 35-50": "Мідь та алюміній",
+            "Мідь 9ХС HRC 35-50": "Мідь та алюміній",
+            "Мідь ХВГ HRC 51-62": "Мідь та алюміній",
+            "Мідь У12А HRC 51-62": "Мідь та алюміній",
+            "Алюміній Р6М5 HRC 35-50": "Мідь та алюміній",
+            "Алюміній ВК4 HRC 35-50": "Мідь та алюміній",
+            "Алюміній ВК6 HRC 35-50": "Мідь та алюміній",
+            "Алюміній 9ХС HRC 35-50": "Мідь та алюміній",
+            "Алюміній ХВГ HRC 51-62": "Мідь та алюміній",
+            "Алюміній У12А HRC 51-62": "Мідь та алюміній",
         }
     def update_text(self):
 
@@ -221,8 +218,6 @@ class MillingApp(QWidget):
         is_roughing = self.processing_type_combo.currentText() == "Чорнова"
 
         is_end_mill_2 = self.tool_type_combo.currentText() in ["Торцева", "Циліндрична", "Дискова"]
-        self.tool_material_combo.setVisible(is_end_mill_2)
-        self.tool_material_label.setVisible(is_end_mill_2)
 
         is_tool_material = self.tool_material_combo.currentText() == "Швидкорізальна сталь"
         tooth_size_visible = is_roughing and is_tool_material and is_end_mill_2

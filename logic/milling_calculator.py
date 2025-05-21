@@ -2,7 +2,7 @@
 
 from PySide6.QtGui import QPalette, QColor
 from PySide6.QtWidgets import QMessageBox
-from logic.query_db import get_feed_A1, get_feed_A2, get_feed_A3, get_feed_A4, get_feed_A5, get_cutting_speeds_A6, get_tool_life_A8, get_Knv, get_Kuv
+from logic.query_db import get_feed_A1, get_feed_A2, get_feed_A3, get_feed_A4, get_feed_A5, get_cutting_speeds_A6, get_tool_life_A8, get_Knv, get_Kuv, get_cutting_speeds_A7, get_nv, get_machines
 
 
 class MillingCalculator:
@@ -17,6 +17,7 @@ class MillingCalculator:
         self.window.calculate_button.clicked.connect(self.depth_calculation)
         self.window.calculate_button.clicked.connect(self.feed_calculation)
         self.window.calculate_button.clicked.connect(self.speed_calculation)
+        self.window.calculate_button.clicked.connect(self.get_suitable_machines)
 
 
         self.window.milling_width_input.textEdited.connect(lambda: self.clear_error(self.window.milling_width_input))
@@ -164,8 +165,66 @@ class MillingCalculator:
             self.window.result_feed_rate.setText(str(feed))
 
     def speed_calculation(self):
+        material_A6_list = [
+            "Сталь конструкційна Т5К12В", "Сталь конструкційна Т5К10", "Сталь конструкційна P18",
+            "Сталь конструкційна Т15К6", "Сталь конструкційна Р6М5", "Сталь конструкційна Т30К4",
+            "Сталь конструкційна ВК8", "Сталь загартована Т15К6 HRC 35-50", "Сталь загартована Т30К4 HRC 35-50",
+            "Сталь загартована ВК6 HRC 35-50", "Сталь загартована ВК8 HRC 35-50",
+            "Сталь загартована ВК4 HRC 51-62", "Сталь загартована ВК6 HRC 51-62", "Сталь загартована ВК8 HRC 51-62",
+            "Чавун ВК8 HRC 35-50", "Чавун ВК6 HRC 35-50", "Чавун ВК4 HRC 35-50",
+            "Чавун ВК3 HRC 35-50", "Чавун Р18 HRC 51-62", "Чавун Р6М3 HRC 51-62",
+        ]
+        material_A7_list = [
+            "Мідь Р6М5 HRC 35-50", "Мідь ВК4 HRC 35-50",
+            "Мідь ВК6 HRC 35-50", "Мідь 9ХС HRC 35-50",
+            "Мідь ХВГ HRC 51-62", "Мідь У12А HRC 51-62",
+            "Алюміній Р6М5 HRC 35-50", "Алюміній ВК4 HRC 35-50",
+            "Алюміній ВК6 HRC 35-50", "Алюміній 9ХС HRC 35-50",
+            "Алюміній ХВГ HRC 51-62", "Алюміній У12А HRC 51-62",
+        ]
+
+        material_category_map = {
+            "Сталь конструкційна Т5К12В": "Сталь",
+            "Сталь конструкційна Т5К10": "Сталь",
+            "Сталь конструкційна P18": "Сталь",
+            "Сталь конструкційна Т15К6": "Сталь",
+            "Сталь конструкційна Р6М5": "Сталь",
+            "Сталь конструкційна Т30К4": "Сталь",
+            "Сталь конструкційна ВК8": "Сталь",
+            "Сталь загартована Т15К6 HRC 35-50": "Сталь",
+            "Сталь загартована Т30К4 HRC 35-50": "Сталь",
+            "Сталь загартована ВК6 HRC 35-50": "Сталь",
+            "Сталь загартована ВК8 HRC 35-50": "Сталь",
+            "Сталь загартована ВК4 HRC 51-62": "Сталь",
+            "Сталь загартована ВК6 HRC 51-62": "Сталь",
+            "Сталь загартована ВК8 HRC 51-62": "Сталь",
+
+            "Чавун ВК8 HRC 35-50": "Чавун",
+            "Чавун ВК6 HRC 35-50": "Чавун",
+            "Чавун ВК4 HRC 35-50": "Чавун",
+            "Чавун ВК3 HRC 35-50": "Чавун",
+            "Чавун Р18 HRC 51-62": "Чавун",
+            "Чавун Р6М3 HRC 51-62": "Чавун",
+
+            "Мідь Р6М5 HRC 35-50" : "Мідь",
+            "Мідь ВК4 HRC 35-50" : "Мідь",
+            "Мідь ВК6 HRC 35-50" : "Мідь",
+            "Мідь 9ХС HRC 35-50" : "Мідь",
+            "Мідь ХВГ HRC 51-62" : "Мідь",
+            "Мідь У12А HRC 51-62" : "Мідь",
+            "Алюміній Р6М5 HRC 35-50" : "Алюміній",
+            "Алюміній ВК4 HRC 35-50" : "Алюміній",
+            "Алюміній ВК6 HRC 35-50" : "Алюміній",
+            "Алюміній 9ХС HRC 35-50" : "Алюміній",
+            "Алюміній ХВГ HRC 51-62" : "Алюміній",
+            "Алюміній У12А HRC 51-62" : "Алюміній",
+        }
         material = self.window.material_combo.currentText()
-        material_strength = float(self.window.material_strength_input.text())
+        if material in material_category_map:
+            material_category = material_category_map[material]
+        else:
+            return None
+
         tool_type = self.window.tool_type_combo.currentText()
         tool_material = self.window.tool_material_combo.currentText()
         milling_width = float(self.window.milling_width_input.text())
@@ -184,8 +243,14 @@ class MillingCalculator:
             tool_subtype = None
         if (tool_type == "Циліндрична"):
             tool_subtype = None
-        power = get_cutting_speeds_A6(material, material_strength, tool_type, tool_subtype, tool_material,
-                                      milling_width, depth, feed)
+
+        if (material in material_A6_list):
+            material_strength = float(self.window.material_strength_input.text())
+            power = get_cutting_speeds_A6(material, material_strength, tool_type, tool_subtype, tool_material,
+                                          milling_width, depth, feed)
+
+        if (material in material_A7_list):
+            power = get_cutting_speeds_A7(material, tool_type, feed)
 
 
         if power is not None:
@@ -199,18 +264,47 @@ class MillingCalculator:
 
         Knv = get_Knv(surface_state)
         Kuv = get_Kuv(material)
+        nv = float(get_nv(material, tool_material))
 
-        Kv = Knv * Kuv
+        if (material_category == "Сталь"):
+            material_strength = float(self.window.material_strength_input.text())
+            Kmv = (750 / material_strength) ** nv
+        elif (material_category == "Чавун"):
+            material_strength = float(self.window.material_strength_input.text())
+            Kmv = (1900 / material_strength) ** nv
+        elif (material_category == "Мідь"):
+            Kmv = 1.8
+        elif (material_category == "Алюміній"):
+            Kmv = 1
+        Kv = Knv * Kuv * Kmv
 
         tool_life = get_tool_life_A8(tool_type, tool_diameter)
-        print(tool_life)
 
         Vp = ((Cv * (float(tool_diameter) ** q)) / ((tool_life ** m) * (depth ** x) * (feed ** y) * (milling_width ** u) * (teeth_number ** p))) * Kv
 
+        self.window.result_cutting_speed.setText(str(round(Vp, 2)))
 
+        np = (1000 * Vp) / (3.14 * float(tool_diameter))
 
-        self.window.result_cutting_speed.setText(str(Vp))
+        self.window.result_spindle_speed.setText(str(round(np, 0)))
 
+    def get_suitable_machines(self):
+        teeth_number = float(self.window.teeth_number_input.text())
+        processing_type = self.window.processing_type_combo.currentText()
+        spindle_speed = float(self.window.result_spindle_speed.text())
+        feed = float(self.window.result_feed_rate.text())
+
+        if (processing_type == "Чорнова"):
+            minute_feed = feed * spindle_speed * teeth_number
+        else :
+            minute_feed = feed * spindle_speed
+
+        machines = get_machines(minute_feed, spindle_speed)
+        result_text = ""
+        for machine in machines:
+            result_text += f"Модель: {machine[0]}, Тип: {machine[1]}, Розмір столу: {machine[2]}\n"
+            self.window.machines.setText(result_text)
+            print(f"Модель: {machine[0]}, Тип: {machine[1]}, Розмір столу: {machine[2]}")
 
     def set_input_errors(self, input_widgets):
         for widget in input_widgets:

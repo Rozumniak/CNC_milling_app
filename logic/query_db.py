@@ -25,12 +25,18 @@ material_category_map = {
     "Чавун Р18 HRC 51-62": "Чавун та мідні сплави",
     "Чавун Р6М3 HRC 51-62": "Чавун та мідні сплави",
 
-    "Мідь або алюніній Р6М5 HRC 35-50": "Чавун та мідні сплави",
-    "Мідь або алюніній ВК4 HRC 35-50": "Чавун та мідні сплави",
-    "Мідь або алюніній ВК6 HRC 35-50": "Чавун та мідні сплави",
-    "Мідь або алюніній 9ХС HRC 35-50": "Чавун та мідні сплави",
-    "Мідь або алюніній ХВГ HRC 51-62": "Чавун та мідні сплави",
-    "Мідь або алюніній У12А HRC 51-62": "Чавун та мідні сплави",
+    "Мідь Р6М5 HRC 35-50": "Чавун та мідні сплави",
+    "Мідь ВК4 HRC 35-50": "Чавун та мідні сплави",
+    "Мідь ВК6 HRC 35-50": "Чавун та мідні сплави",
+    "Мідь 9ХС HRC 35-50": "Чавун та мідні сплави",
+    "Мідь ХВГ HRC 51-62": "Чавун та мідні сплави",
+    "Мідь У12А HRC 51-62": "Чавун та мідні сплави",
+    "Алюміній Р6М5 HRC 35-50": "Чавун та мідні сплави",
+    "Алюміній ВК4 HRC 35-50": "Чавун та мідні сплави",
+    "Алюміній ВК6 HRC 35-50": "Чавун та мідні сплави",
+    "Алюміній 9ХС HRC 35-50": "Чавун та мідні сплави",
+    "Алюміній ХВГ HRC 51-62": "Чавун та мідні сплави",
+    "Алюміній У12А HRC 51-62": "Чавун та мідні сплави",
 }
 tool_type_map = {
     "Торцева": "Торцеві і дискові",
@@ -62,12 +68,19 @@ def get_feed_A1(material, workbench_power):
         "Чавун Р18 HRC 51-62": ("Чавун та мідні сплави", "BK6"),
         "Чавун Р6М3 HRC 51-62": ("Чавун та мідні сплави", "BK6"),
 
-        "Мідь або алюніній Р6М5 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
-        "Мідь або алюніній ВК4 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
-        "Мідь або алюніній ВК6 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
-        "Мідь або алюніній 9ХС HRC 35-50": ("Чавун та мідні сплави", "BK6"),
-        "Мідь або алюніній ХВГ HRC 51-62": ("Чавун та мідні сплави", "BK6"),
-        "Мідь або алюніній У12А HRC 51-62": ("Чавун та мідні сплави", "BK6"),
+        "Мідь Р6М5 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
+        "Мідь ВК4 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
+        "Мідь ВК6 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
+        "Мідь 9ХС HRC 35-50": ("Чавун та мідні сплави", "BK6"),
+        "Мідь ХВГ HRC 51-62": ("Чавун та мідні сплави", "BK6"),
+        "Мідь У12А HRC 51-62": ("Чавун та мідні сплави", "BK6"),
+
+        "Алюміній Р6М5 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
+        "Алюміній ВК4 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
+        "Алюміній ВК6 HRC 35-50": ("Чавун та мідні сплави", "BK6"),
+        "Алюміній 9ХС HRC 35-50": ("Чавун та мідні сплави", "BK6"),
+        "Алюміній ХВГ HRC 51-62": ("Чавун та мідні сплави", "BK6"),
+        "Алюміній У12А HRC 51-62": ("Чавун та мідні сплави", "BK6"),
     }
 
     if material in material_map:
@@ -159,12 +172,19 @@ def get_feed_A3(material, tool_type, tool_diameter, tool_material):
         "Чавун Р18 HRC 51-62": "Чавун, мідні та алюмінієві сплави",
         "Чавун Р6М3 HRC 51-62": "Чавун, мідні та алюмінієві сплави",
 
-        "Мідь або алюніній Р6М5 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
-        "Мідь або алюніній ВК4 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
-        "Мідь або алюніній ВК6 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
-        "Мідь або алюніній 9ХС HRC 35-50": "Чавун, мідні та алюмінієві сплави",
-        "Мідь або алюніній ХВГ HRC 51-62": "Чавун, мідні та алюмінієві сплави",
-        "Мідь або алюніній У12А HRC 51-62": "Чавун, мідні та алюмінієві сплави",
+        "Мідь Р6М5 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
+        "Мідь ВК4 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
+        "Мідь ВК6 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
+        "Мідь 9ХС HRC 35-50": "Чавун, мідні та алюмінієві сплави",
+        "Мідь ХВГ HRC 51-62": "Чавун, мідні та алюмінієві сплави",
+        "Мідь У12А HRC 51-62": "Чавун, мідні та алюмінієві сплави",
+
+        "Алюміній Р6М5 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
+        "Алюміній ВК4 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
+        "Алюміній ВК6 HRC 35-50": "Чавун, мідні та алюмінієві сплави",
+        "Алюміній 9ХС HRC 35-50": "Чавун, мідні та алюмінієві сплави",
+        "Алюміній ХВГ HRC 51-62": "Чавун, мідні та алюмінієві сплави",
+        "Алюміній У12А HRC 51-62": "Чавун, мідні та алюмінієві сплави",
     }
     # Мапінг матеріалу та типу фрези
     material = material_map.get(material)
@@ -310,6 +330,54 @@ def get_cutting_speeds_A6(material, material_strength, tool_type, tool_subtype, 
 
     return result if result else None
 
+def get_cutting_speeds_A7(material, tool_type, feed):
+    material_category_map = {
+        "Мідь Р6М5 HRC 35-50" : "Мідь",
+        "Мідь ВК4 HRC 35-50" : "Мідь",
+        "Мідь ВК6 HRC 35-50" : "Мідь",
+        "Мідь 9ХС HRC 35-50" : "Мідь",
+        "Мідь ХВГ HRC 51-62" : "Мідь",
+        "Мідь У12А HRC 51-62" : "Мідь",
+        "Алюміній Р6М5 HRC 35-50" : "Алюміній",
+        "Алюміній ВК4 HRC 35-50" : "Алюміній",
+        "Алюміній ВК6 HRC 35-50" : "Алюміній",
+        "Алюміній 9ХС HRC 35-50" : "Алюміній",
+        "Алюміній ХВГ HRC 51-62" : "Алюміній",
+        "Алюміній У12А HRC 51-62" : "Алюміній",
+    }
+    if (feed < 0.1):
+        feed = "<0,1"
+    elif (feed > 0.1):
+        feed = ">0,1"
+
+    if material in material_category_map:
+        material = material_category_map[material]
+    else:
+        return None
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    if (tool_type == "Торцева" or tool_type == "Циліндрична"):
+        query = """
+                                       SELECT Cv, q, x, y, u, p, m
+                                       FROM cutting_speed_A7
+                                       WHERE tool_type = ? AND material = ? AND sz = ?
+                                   """
+        cursor.execute(query, (tool_type, material, feed))
+        result = cursor.fetchone()
+        conn.close()
+        return result if result else None
+    else:
+        query = """
+                                       SELECT Cv, q, x, y, u, p, m
+                                       FROM cutting_speed_A7
+                                       WHERE tool_type = ? AND material = ?
+                                   """
+        cursor.execute(query, (tool_type, material))
+        result = cursor.fetchone()
+        conn.close()
+        return result if result else None
+
+
 def get_tool_life_A8(tool_type, tool_diameter):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -322,6 +390,74 @@ def get_tool_life_A8(tool_type, tool_diameter):
     result = cursor.fetchone()
     conn.close()
     return result[0] if result else None
+
+def get_nv(material, tool_material):
+    material_group_map = {
+        "Сталь конструкційна Т5К12В": ("Сталь (C>0.6%)", "None"),
+        "Сталь конструкційна Т5К10": ("Сталь (C>0.6%)", "None"),
+        "Сталь конструкційна P18": ("Сталь (C>0.6%)", "Хромованадієва"),
+        "Сталь конструкційна Т15К6": ("Сталь (C>0.6%)", "Хромованадієва"),
+        "Сталь конструкційна Р6М5": ("Сталь (C>0.6%)", "Хромованадієва"),
+        "Сталь конструкційна Т30К4": ("Сталь (C>0.6%)", "None"),
+        "Сталь конструкційна ВК8": ("Сталь (C>0.6%)", "None"),
+        "Сталь загартована Т15К6 HRC 35-50": ("Сталь (C>0.6%)", "Хромованадієва"),
+        "Сталь загартована Т30К4 HRC 35-50": ("Сталь (C>0.6%)", "None"),
+        "Сталь загартована ВК6 HRC 35-50": ("Сталь (C>0.6%)", "None"),
+        "Сталь загартована ВК8 HRC 35-50": ("Сталь (C>0.6%)", "None"),
+        "Сталь загартована ВК4 HRC 51-62": ("Сталь (C>0.6%)", "None"),
+        "Сталь загартована ВК6 HRC 51-62": ("Сталь (C>0.6%)", "None"),
+        "Сталь загартована ВК8 HRC 51-62": ("Сталь (C>0.6%)", "None"),
+
+        "Чавун ВК8 HRC 35-50": ("Чавун", "Сірий"),
+        "Чавун ВК6 HRC 35-50": ("Чавун", "Сірий"),
+        "Чавун ВК4 HRC 35-50": ("Чавун", "Сірий"),
+        "Чавун ВК3 HRC 35-50": ("Чавун", "Сірий"),
+        "Чавун Р18 HRC 51-62": ("Чавун", "Сірий"),
+        "Чавун Р6М3 HRC 51-62": ("Чавун", "Сірий"),
+
+        "Мідь Р6М5 HRC 35-50": ("Чавун", "Ковкий"),
+        "Мідь ВК4 HRC 35-50": ("Чавун", "Ковкий"),
+        "Мідь ВК6 HRC 35-50": ("Чавун", "Ковкий"),
+        "Мідь 9ХС HRC 35-50": ("Чавун", "Ковкий"),
+        "Мідь ХВГ HRC 51-62": ("Чавун", "Ковкий"),
+        "Мідь У12А HRC 51-62": ("Чавун", "Ковкий"),
+
+        "Алюміній Р6М5 HRC 35-50": ("Чавун", "Ковкий"),
+        "Алюміній ВК4 HRC 35-50": ("Чавун", "Ковкий"),
+        "Алюміній ВК6 HRC 35-50": ("Чавун", "Ковкий"),
+        "Алюміній 9ХС HRC 35-50": ("Чавун", "Ковкий"),
+        "Алюміній ХВГ HRC 51-62": ("Чавун", "Ковкий"),
+        "Алюміній У12А HRC 51-62": ("Чавун", "Ковкий"),
+    }
+
+    if material in material_group_map:
+        material, type = material_group_map[material]
+    else:
+        return None
+    if(tool_material == "Твердий сплав"):
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        query = """
+                       SELECT milling_carbide
+                       FROM A9_speed_exponents
+                       WHERE material = ? AND condition = ?              
+                       """
+        cursor.execute(query, (material, type,))
+        result = cursor.fetchone()
+        conn.close()
+        return result[0] if result else None
+    if (tool_material == "Швидкорізальна сталь"):
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        query = """
+                               SELECT milling_hss
+                               FROM A9_speed_exponents
+                               WHERE material = ? AND condition = ?              
+                               """
+        cursor.execute(query, (material, type,))
+        result = cursor.fetchone()
+        conn.close()
+        return result[0] if result else None
 
 def get_Knv(surface_state):
     if (surface_state == "Без кірки"):
@@ -367,3 +503,18 @@ def get_Kuv(material):
     result = cursor.fetchone()
     conn.close()
     return result[0] if result else None
+
+def get_machines(feed_value, spindle_speed_value):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    query = '''
+       SELECT model, type, table_size
+       FROM A12_milling_machines
+       WHERE
+           ? BETWEEN longitudinal_feed_min AND longitudinal_feed_max
+           AND ? BETWEEN spindle_speed_min AND spindle_speed_max
+       '''
+    cursor.execute(query, (feed_value, spindle_speed_value))
+    results = cursor.fetchall()
+    conn.close()
+    return results
