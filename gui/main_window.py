@@ -141,6 +141,19 @@ class MillingApp(QWidget):
 
         parameters_group.setLayout(parameters_layout)
         calculate_button = QPushButton("Розрахувати")
+        calculate_button.setStyleSheet("""
+            QPushButton {
+                background-color: #4CAF50;  /* зелений */
+                color: white;               /* текст білий */
+                font-weight: bold;
+                border-radius: 6px;
+                padding: 6px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+        """)
+
         results_group = QGroupBox("Результати розрахунку")
         results_layout = QFormLayout()
         self.result_depth = QLabel("-")
@@ -161,6 +174,68 @@ class MillingApp(QWidget):
         results_layout.addRow(QLabel("Рекомендовані верстати:"), self.machines)
 
         results_group.setLayout(results_layout)
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #f9f9f9;
+                font-family: 'Segoe UI', 'Sans Serif';
+                font-size: 10.5pt;
+                color: #2e2e2e;
+            }
+
+            QGroupBox {
+                background-color: #f5f5f5;
+                border: 1px solid #d0d0d0;
+                border-radius: 6px;
+                margin-top: 10px;
+                padding-top: 6px;
+            }
+
+            QGroupBox:title {
+                subcontrol-origin: margin;
+                subcontrol-position: top left;
+                padding: 0 6px;
+                color: #424242;
+                font-weight: bold;
+            }
+
+            QLabel {
+                background-color: transparent;
+                color: #2e2e2e;
+            }
+
+            QLineEdit, QComboBox {
+                background-color: #ffffff;
+                border: 1px solid #cccccc;
+                padding: 4px;
+                border-radius: 4px;
+            }
+
+            QLineEdit:focus, QComboBox:focus {
+                border: 1px solid #64b5f6;
+                background-color: #ffffff;
+            }
+
+            QRadioButton {
+                padding: 3px;
+                color: #333;
+            }
+
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                font-weight: bold;
+                border-radius: 6px;
+                padding: 6px 12px;
+            }
+
+            QPushButton:hover {
+                background-color: #43a047;
+            }
+
+            QPushButton:pressed {
+                background-color: #388e3c;
+            }
+        """)
 
         main_layout.addWidget(parameters_group)
         main_layout.addWidget(calculate_button)
@@ -206,6 +281,8 @@ class MillingApp(QWidget):
             "Алюміній ХВГ HRC 51-62": "Мідь та алюміній",
             "Алюміній У12А HRC 51-62": "Мідь та алюміній",
         }
+
+
     def update_text(self):
 
         is_roughing = self.processing_type_combo.currentText() == "Чорнова"
